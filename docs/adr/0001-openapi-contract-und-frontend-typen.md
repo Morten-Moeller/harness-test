@@ -32,8 +32,8 @@ Kräfte:
 #### Option A: Quarkus schreibt das Dokument beim Build
 
 `quarkus.smallrye-openapi.store-schema-directory=../contracts` in `application.properties`.
-Jeder Maven-Build, auch `make backend-typecheck` und `make backend-test`, schreibt
-`contracts/openapi.yaml` neu.
+Jeder Build, der die Anwendung augmentiert (`./mvnw package`, jeder `@QuarkusTest`-Lauf in
+`make backend-test`), schreibt `contracts/openapi.yaml` neu; ein reines `test-compile` nicht.
 
 - Vorteile: kein laufender Server, keine zusätzliche Abhängigkeit, läuft in CI mit den
   vorhandenen Gates. Eine Abweichung zwischen Code und Contract wird als `git diff` sichtbar und
@@ -111,7 +111,7 @@ Laufzeitcode.
 ## Entscheidung
 
 Teil 1 Option A, Teil 2 Option A, Teil 3 Option A. Quarkus schreibt `contracts/openapi.yaml`
-bei jedem Maven-Build über `store-schema-directory`; die Datei ist der Contract und wird nie von
+bei jedem augmentierenden Build über `store-schema-directory`; die Datei ist der Contract und wird nie von
 Hand geändert. Das Frontend erzeugt seine Typen mit `openapi-typescript` aus dieser Datei nach
 `frontend/src/app/shared/api.generated.ts`; ein Make-Target `contracts` führt beide Schritte
 nacheinander aus und ist das Target für `contracts_generate_target`. Die Version steht in
