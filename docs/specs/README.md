@@ -5,7 +5,7 @@ Die Freigabe (`approved`) setzt eine Person, nie ein Agent.
 
 | Nr | Titel | Risiko | Status | PR | Erstellt | Offene Fragen |
 |---|---|---|---|---|---|---|
-| 0001 | Eine Einkaufsliste mit Artikeln | high | Review | – | 2026-11-09 | – |
+| 0001 | Eine Einkaufsliste mit Artikeln | high | Review | #4 | 2026-11-09 | – |
 
 ## Entscheidungen
 
