@@ -33,7 +33,8 @@
 ## APIs
 
 - Contract first: the endpoint is in the spec before the code. The OpenAPI document is generated
-  by Quarkus; how it lands in `contracts/` is decided with the first API spec.
+  by Quarkus and written to `contracts/openapi.yaml` at build time; `make contracts` regenerates
+  it together with the frontend types. Rules: `contracts/README.md`, decision: ADR 0001.
 
 ## Quality
 

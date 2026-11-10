@@ -14,7 +14,7 @@ endif
 MVN  := cd backend && ./mvnw -q -B -ntp
 PNPM := pnpm --dir frontend
 
-.PHONY: test typecheck lint install frontend-test backend-test frontend-typecheck backend-typecheck frontend-lint backend-lint format dev-frontend dev-backend
+.PHONY: test typecheck lint install frontend-test backend-test frontend-typecheck backend-typecheck frontend-lint backend-lint format contracts dev-frontend dev-backend
 
 install: ## Install the frontend dependencies
 	$(PNPM) install --frozen-lockfile
@@ -48,6 +48,14 @@ backend-lint:
 format: ## Format frontend and backend
 	$(PNPM) exec prettier --write src
 	$(MVN) spotless:apply
+
+GENERATED_TYPES := frontend/src/app/shared/api.generated.ts
+
+contracts: ## Regenerate contracts/openapi.yaml from the backend and the frontend types from it
+	$(MVN) -DskipTests package
+	$(PNPM) exec openapi-typescript ../contracts/openapi.yaml -o src/app/shared/api.generated.ts
+	{ printf '// Generated from contracts/openapi.yaml by openapi-typescript (make contracts). Do not edit.\n'; cat $(GENERATED_TYPES); } > $(GENERATED_TYPES).tmp
+	mv $(GENERATED_TYPES).tmp $(GENERATED_TYPES)
 
 dev-frontend: ## Start the frontend dev server on http://localhost:4200
 	$(PNPM) start

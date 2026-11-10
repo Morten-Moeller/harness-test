@@ -20,8 +20,10 @@
 - Component state in signals (`signal`, `computed`). No NgRx.
 - Server data through one service per feature with `HttpClient`, under the path `/api`. The dev
   server proxies `/api` to http://localhost:8080 (`proxy.conf.json`, added with the first API).
-- Types for requests and responses come from the contract in `contracts/` once it exists. No
-  hand-written copies of backend types next to a generated one.
+- Types for requests and responses come from the contract: `make contracts` generates
+  `src/app/shared/api.generated.ts` with `openapi-typescript` from `contracts/openapi.yaml`;
+  `src/app/shared/api.ts` exports the aliases. No hand-written copies of backend types next to
+  the generated one (ADR 0001).
 
 ## UI
 

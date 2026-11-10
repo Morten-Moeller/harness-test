@@ -1,0 +1,61 @@
+<main class="shopping-list">
+  <h1>{{ listName() }}</h1>
+
+  <form class="add-form" (ngSubmit)="add()">
+    <div class="field">
+      <label for="item-name">Artikel</label>
+      <input
+        id="item-name"
+        #nameInput
+        name="name"
+        type="text"
+        autocomplete="off"
+        [(ngModel)]="name"
+      />
+    </div>
+    <div class="field">
+      <label for="item-quantity">Menge</label>
+      <input
+        id="item-quantity"
+        name="quantity"
+        type="text"
+        autocomplete="off"
+        [(ngModel)]="quantity"
+      />
+    </div>
+    <button type="submit">Hinzufügen</button>
+  </form>
+
+  @if (validationMessage()) {
+    <p class="message message-validation" role="alert">{{ validationMessage() }}</p>
+  }
+  @if (serverMessage()) {
+    <p class="message message-server" role="alert">{{ serverMessage() }}</p>
+  }
+
+  @if (items().length === 0) {
+    <p class="empty">Noch keine Artikel</p>
+  } @else {
+    <ul class="items">
+      @for (item of items(); track item.id) {
+        <li class="item" [class.item-done]="item.done">
+          <label class="item-label">
+            <input
+              #doneBox
+              type="checkbox"
+              [checked]="item.done"
+              (change)="toggleDone(item, doneBox)"
+            />
+            <span class="item-name">{{ item.name }}</span>
+            @if (item.quantity) {
+              <span class="item-quantity">{{ item.quantity }}</span>
+            }
+          </label>
+          <button type="button" (click)="remove(item)" [attr.aria-label]="'Löschen: ' + item.name">
+            Löschen
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</main>

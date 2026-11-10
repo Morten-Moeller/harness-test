@@ -1,0 +1,135 @@
+---
+openapi: 3.1.0
+components:
+  schemas:
+    CreateItemRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: \S
+          maxLength: 100
+        quantity:
+          type: string
+          maxLength: 50
+    Item:
+      required:
+      - id
+      - name
+      - done
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        quantity:
+          type: string
+        done:
+          type: boolean
+    ShoppingList:
+      required:
+      - name
+      - items
+      type: object
+      properties:
+        name:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+    UpdateItemRequest:
+      type: object
+      required:
+      - done
+      properties:
+        done:
+          type: boolean
+tags:
+- name: shopping-list
+paths:
+  /api/shopping-list:
+    get:
+      operationId: getShoppingList
+      tags:
+      - shopping-list
+      responses:
+        "200":
+          description: The shopping list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShoppingList"
+      summary: Get Shopping List
+  /api/shopping-list/items:
+    post:
+      operationId: addItem
+      tags:
+      - shopping-list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateItemRequest"
+        required: true
+      responses:
+        "201":
+          description: The created item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Validation error
+      summary: Add Item
+  /api/shopping-list/items/{id}:
+    patch:
+      operationId: updateItem
+      tags:
+      - shopping-list
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateItemRequest"
+        required: true
+      responses:
+        "200":
+          description: The updated item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Validation error
+        "404":
+          description: Unknown item
+      summary: Update Item
+    delete:
+      operationId: deleteItem
+      tags:
+      - shopping-list
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Item deleted
+        "404":
+          description: Unknown item
+      summary: Delete Item
+info:
+  title: Einkaufsliste API
+  version: 1.0.0
