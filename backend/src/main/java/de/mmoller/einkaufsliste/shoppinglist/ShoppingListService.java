@@ -20,17 +20,12 @@ public class ShoppingListService {
     }
 
     public Item addItem(CreateItemRequest request) {
-        String quantity = request.quantity() == null ? null : request.quantity().trim();
-        if (quantity != null && quantity.isEmpty()) {
-            quantity = null;
-        }
-        Item item = new Item(UUID.randomUUID().toString(), request.name().trim(), quantity, false);
+        Item item = new Item(UUID.randomUUID().toString(), request.name(), request.quantity(), false);
         return repository.save(item);
     }
 
     public Item setDone(String id, boolean done) {
-        Item item = repository.find(id).orElseThrow(() -> notFound(id));
-        return repository.save(item.withDone(done));
+        return repository.update(id, item -> item.withDone(done)).orElseThrow(() -> notFound(id));
     }
 
     public void deleteItem(String id) {

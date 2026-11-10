@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 @ApplicationScoped
 public class ShoppingListRepository {
@@ -15,13 +16,13 @@ public class ShoppingListRepository {
         return List.copyOf(items.values());
     }
 
-    public synchronized Optional<Item> find(String id) {
-        return Optional.ofNullable(items.get(id));
-    }
-
     public synchronized Item save(Item item) {
         items.put(item.id(), item);
         return item;
+    }
+
+    public synchronized Optional<Item> update(String id, UnaryOperator<Item> change) {
+        return Optional.ofNullable(items.computeIfPresent(id, (key, item) -> change.apply(item)));
     }
 
     public synchronized boolean delete(String id) {

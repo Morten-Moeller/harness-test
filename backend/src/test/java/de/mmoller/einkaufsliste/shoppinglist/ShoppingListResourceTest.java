@@ -105,6 +105,19 @@ class ShoppingListResourceTest {
     }
 
     @Test
+    void acceptsNameOf100CharactersWithSurroundingSpaces() {
+        String name = "x".repeat(100);
+
+        given().contentType(ContentType.JSON)
+                .body(Map.of("name", "  " + name + "   "))
+                .when()
+                .post(ITEMS)
+                .then()
+                .statusCode(201)
+                .body("name", equalTo(name));
+    }
+
+    @Test
     void rejectsQuantityOver50Characters() {
         given().contentType(ContentType.JSON)
                 .body(Map.of("name", "Mehl", "quantity", "x".repeat(51)))
